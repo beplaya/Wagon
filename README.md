@@ -1,7 +1,7 @@
 Wagon
 =====
 
-A no fuss method of passing extras between Android Activities
+#####A no fuss method of passing extras between Android Activities using annotations.
 
 
 ##Example
@@ -23,10 +23,9 @@ A no fuss method of passing extras between Android Activities
 		Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
 		wagon.pack(intent);
 		startActivity(intent);
-		finish();
 	}
 ```
-####Unpack your boxes from the wagon
+####Unpack your boxes from the wagon:
 ```Java
 public class OtherActivity extends Activity {
 	@WoodBox(key = "theList")
