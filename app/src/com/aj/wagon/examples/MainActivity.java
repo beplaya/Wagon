@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.widget.TextView;
 
 import com.aj.wagon.R;
@@ -32,23 +31,18 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		final Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);
 
 		((TextView) findViewById(id.tv)).setText("Main");
 
-		Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				startNextActivity(wagon);
-			}
+		startNextAcitivity();
+	}
 
-			private void startNextActivity(final Wagon<MainActivity> wagon) {
-				Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
-				wagon.pack(intent);
-				startActivity(intent);
-				finish();
-			}
-		}, 3000);
+	private void startNextAcitivity() {
+		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);
+		final Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
+		wagon.pack(intent);
+
+		startActivity(intent);
+		finish();
 	}
 }
