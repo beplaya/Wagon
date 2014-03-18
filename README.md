@@ -58,6 +58,7 @@ public class OtherActivity extends Activity {
 ```
 
 ####CrateExample class used above
+```Java
 public class CrateExample {
 
 	public ArrayList<String> theListInCrate = new ArrayList<String>() {
@@ -77,4 +78,4 @@ public class CrateExample {
 		Log.i("CrateExampletheString", theStringInCrate);
 	}
 }
-
+```
