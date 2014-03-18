@@ -87,3 +87,29 @@ public class CrateExample {
 	}
 }
 ```
+
+####Nesting crates
+#####You may nest crates within other crates without limit.  Simply annotate each an your object in the class as @Crate.
+#####There is no reason to use a WoodBox within a Crate.  Any field within a Crate is already considered a WoodBox.
+#####E.G.
+```Java
+	public class MainActivity extends Activity {
+	@WoodBox(key = "somePrimitive")
+	public void float value = 42;
+
+	@Crate(key = "theCrate")
+	public CrateExample crateExample;
+	//...
+```
+```java
+public class CrateExample {
+
+	//No need to annotate as WoodBox.  Already considered one.
+	public void int number = 77;
+	public ArrayList<String> theListInCrate;
+
+	@Crate(key = "theNestedCrate")
+	public NestedCrateExample nestedCrate;
+	//...
+}
+```
