@@ -89,7 +89,7 @@ public class CrateExample {
 ```
 
 ####Nesting crates
-#####You may nest crates within other crates without limit.  Simply annotate each an your object in the class as @Crate.
+#####You may nest crates within other crates without limit.  Simply annotate each Object field in the class as @Crate.
 #####There is no reason to use a WoodBox within a Crate.  Any field within a Crate is already considered a WoodBox.
 #####E.G.
 ```Java
