@@ -2,7 +2,7 @@ Wagon
 =====
 
 #####A no fuss method of passing extras between Android Activities using annotations.
-
+####More types coming soon!
 ##How To Use:
 Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' doesn't exist, create it at the same level as 'src'.
 
