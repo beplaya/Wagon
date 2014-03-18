@@ -7,13 +7,6 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 
-/**
- * 
- * @author JAMESG-C
- * 
- * @param <E>
- *            ClassWithWoodBoxes
- */
 public class Wagon<E> {
 
 	public static final String VERSION = "1.01";
