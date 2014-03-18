@@ -93,18 +93,20 @@ public class Wagon<E> {
 				Annotation annotation = field.getAnnotation(WoodBox.class);
 				if (annotation == null)
 					annotation = field.getAnnotation(Crate.class);
-				if (annotation == null) {
-				} else if (annotation instanceof WoodBox || unpackAllFields) {
-					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = upackBox(extras, field, annotation, key, instance);
-				} else if (annotation instanceof Crate) {
-					try {
-						Object instanceOfCrate = field.get(instance);
-						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = unpack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
-					} catch (Exception e) {
-						e.printStackTrace();
-						itWorked = false;
+
+				if (shouldPackField(annotation) || unpackAllFields) {
+					if (annotation instanceof WoodBox || unpackAllFields) {
+						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+						itWorked = upackBox(extras, field, annotation, key, instance);
+					} else if (annotation instanceof Crate) {
+						try {
+							Object instanceOfCrate = field.get(instance);
+							Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+							itWorked = unpack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+						} catch (Exception e) {
+							e.printStackTrace();
+							itWorked = false;
+						}
 					}
 				}
 			}

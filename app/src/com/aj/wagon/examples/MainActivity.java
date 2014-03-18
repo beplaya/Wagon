@@ -18,7 +18,13 @@ public class MainActivity extends Activity {
 	// All fields in crates will be copied to
 	// another instance in the next activity
 	@Crate(key = "theCrate")
-	public CrateExample crateExample = new CrateExample();
+	public CrateExample crateExample = new CrateExample(new ArrayList<String>() {
+		{
+			add("listInsideCrate0");
+			add("listInsideCrate1");
+			add("listInsideCrate2");
+		}
+	}, "stringInsideCrate", 43);
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>() {
