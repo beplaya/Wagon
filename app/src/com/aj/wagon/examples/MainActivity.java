@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 			add("listInsideCrate1");
 			add("listInsideCrate2");
 		}
-	}, "stringInsideCrate", 43);
+	}, "stringInsideCrate", 43, 77.5f, (long) 43214);
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>() {

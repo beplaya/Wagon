@@ -16,6 +16,7 @@ import android.os.Bundle;
  */
 public class Wagon<E> {
 
+	public static final String VERSION = "1.01";
 	private Object obj;
 	private Class<? extends E> objType;
 
@@ -55,10 +56,7 @@ public class Wagon<E> {
 			if (annotation == null)
 				annotation = field.getAnnotation(Crate.class);
 			if (shouldPackField(annotation) || packAllFields) {
-				if (annotation instanceof WoodBox || packAllFields) {
-					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(intent, itWorked, field, annotation, key, instance);
-				} else if (annotation instanceof Crate) {
+				if (annotation instanceof Crate) {
 					try {
 						Object instanceOfCrate = field.get(instance);
 						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
@@ -67,6 +65,9 @@ public class Wagon<E> {
 						e.printStackTrace();
 						itWorked = false;
 					}
+				} else if (annotation instanceof WoodBox || packAllFields) {
+					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
+					itWorked = gatherBoxes(intent, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -95,10 +96,7 @@ public class Wagon<E> {
 					annotation = field.getAnnotation(Crate.class);
 
 				if (shouldPackField(annotation) || unpackAllFields) {
-					if (annotation instanceof WoodBox || unpackAllFields) {
-						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-						itWorked = upackBox(extras, field, annotation, key, instance);
-					} else if (annotation instanceof Crate) {
+					if (annotation instanceof Crate) {
 						try {
 							Object instanceOfCrate = field.get(instance);
 							Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
@@ -107,6 +105,9 @@ public class Wagon<E> {
 							e.printStackTrace();
 							itWorked = false;
 						}
+					} else if (annotation instanceof WoodBox || unpackAllFields) {
+						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+						itWorked = upackBox(extras, field, annotation, key, instance);
 					}
 				}
 			}
