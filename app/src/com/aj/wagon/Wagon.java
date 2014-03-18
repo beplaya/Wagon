@@ -1,5 +1,6 @@
 package com.aj.wagon;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -15,7 +16,6 @@ import android.os.Bundle;
  */
 public class Wagon<E> {
 
-	private static final String KEY_TOKEN = "~!..~~";
 	private Object obj;
 	private Class<? extends E> objType;
 
@@ -38,7 +38,7 @@ public class Wagon<E> {
 	 * @return
 	 */
 	public boolean pack(Intent intent) {
-		return pack(intent, objType, obj, false);
+		return pack(intent, objType, obj, false, null);
 	}
 
 	/**
@@ -47,58 +47,65 @@ public class Wagon<E> {
 	 *            intent to put extras in
 	 * @return
 	 */
-	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance) {
-		return pack(intent, objTypeToPack, instance, false);
-	}
-
-	/**
-	 * 
-	 * @param intent
-	 *            intent to put extras in
-	 * @return
-	 */
-	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields) {
+	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
-
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
 		for (Field field : declaredFields) {
-			WoodBox annotation = field.getAnnotation(WoodBox.class);
+			Annotation annotation = field.getAnnotation(WoodBox.class);
+			if (annotation == null)
+				annotation = field.getAnnotation(Crate.class);
 			if (shouldPackField(annotation) || packAllFields) {
-				itWorked = gatherBoxes(intent, itWorked, field, annotation);
-			} else if (annotation instanceof Crate) {
-				try {
-					Object instanceOfCrate = field.get(instance);
-					Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-					pack(intent, objTypeOfCrate, instanceOfCrate, true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					itWorked = false;
+				if (annotation instanceof WoodBox || packAllFields) {
+					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
+					itWorked = gatherBoxes(intent, itWorked, field, annotation, key, instance);
+				} else if (annotation instanceof Crate) {
+					try {
+						Object instanceOfCrate = field.get(instance);
+						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+						itWorked = pack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+					} catch (Exception e) {
+						e.printStackTrace();
+						itWorked = false;
+					}
 				}
-				return itWorked;
 			}
 		}
 
 		return itWorked;
 	}
 
-	private boolean shouldPackField(WoodBox annotation) {
+	private boolean shouldPackField(Annotation annotation) {
 		if (annotation == null)
 			return false;
-		return annotation instanceof WoodBox;
+		return annotation instanceof WoodBox || annotation instanceof Crate;
 	}
 
 	public boolean unpack(Intent intent) {
+		return unpack(intent, objType, obj, false, null);
+	}
+
+	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			Field[] declaredFields = objType.getDeclaredFields();
+			Field[] declaredFields = objTypeToPack.getDeclaredFields();
 			for (Field field : declaredFields) {
-				WoodBox annotation = field.getAnnotation(WoodBox.class);
+				Annotation annotation = field.getAnnotation(WoodBox.class);
+				if (annotation == null)
+					annotation = field.getAnnotation(Crate.class);
 				if (annotation == null) {
-				} else if (annotation instanceof WoodBox) {
-					itWorked = upackBox(extras, field, annotation);
+				} else if (annotation instanceof WoodBox || unpackAllFields) {
+					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+					itWorked = upackBox(extras, field, annotation, key, instance);
 				} else if (annotation instanceof Crate) {
-
+					try {
+						Object instanceOfCrate = field.get(instance);
+						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+						itWorked = unpack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+					} catch (Exception e) {
+						e.printStackTrace();
+						itWorked = false;
+					}
 				}
 			}
 		}
@@ -106,14 +113,13 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean upackBox(Bundle extras, Field field, WoodBox annotation) {
+	private boolean upackBox(Bundle extras, Field field, Annotation annotation, String key, Object instance) {
 		boolean itWorked = false;
-		String key = annotation.key();
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
 			ArrayList<String> value = extras.getStringArrayList(key);
 			try {
-				field.set(obj, value);
+				field.set(instance, value);
 			} catch (Exception e) {
 				e.printStackTrace();
 				itWorked = false;
@@ -121,7 +127,7 @@ public class Wagon<E> {
 		} else if (type.equals(String.class)) {
 			String value = extras.getString(key);
 			try {
-				field.set(obj, value);
+				field.set(instance, value);
 			} catch (Exception e) {
 				e.printStackTrace();
 				itWorked = false;
@@ -130,21 +136,29 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean gatherBoxes(Intent intent, boolean itWorked, Field field, WoodBox annotation) {
-		String key = annotation.key();
+	private String getKey(Annotation annotation) {
+		String key = "";
+		if (annotation instanceof WoodBox)
+			key = ((WoodBox) annotation).key();
+		if (annotation instanceof Crate)
+			key = ((Crate) annotation).key();
+		return key;
+	}
+
+	private boolean gatherBoxes(Intent intent, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = collectArrayList(intent, field, key);
+			itWorked = collectArrayList(intent, field, key, instance);
 		} else if (type.equals(String.class)) {
-			itWorked = collectString(intent, field, key);
+			itWorked = collectString(intent, field, key, instance);
 		}
 		return itWorked;
 	}
 
-	private boolean collectString(Intent intent, Field field, String key) {
+	private boolean collectString(Intent intent, Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			String s = (String) field.get(obj);
+			String s = (String) field.get(instance);
 			intent.putExtra(key, s);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,10 +167,10 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean collectArrayList(Intent intent, Field field, String key) {
+	private boolean collectArrayList(Intent intent, Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			ArrayList<String> alist = (ArrayList<String>) field.get(obj);
+			ArrayList<String> alist = (ArrayList<String>) field.get(instance);
 			intent.putExtra(key, alist);
 		} catch (Exception e) {
 			e.printStackTrace();

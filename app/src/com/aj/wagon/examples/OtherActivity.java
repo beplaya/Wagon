@@ -15,8 +15,8 @@ import com.aj.wagon.WoodBox;
 
 public class OtherActivity extends Activity {
 
-	@Crate
-	public CrateExample crateExample;
+	@Crate(key = "theCrate")
+	public CrateExample crateExample = new CrateExample();
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>();
@@ -34,6 +34,7 @@ public class OtherActivity extends Activity {
 		((TextView) findViewById(id.tv)).setText("Other");
 
 		Log.i("WAGON", "~~~~~~~~~~~START~~~~~~~~~~~~~~~");
+		Log.i("WAGON", "                           ~");
 		Log.i("WAGON", "~~~~~~~~~~~BOXES~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "~~~~~~~~~~~BOXES~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "~~~~~~~~~~~!BOXES~~~~~~~~~~~~~~~");
@@ -44,6 +45,14 @@ public class OtherActivity extends Activity {
 		Log.i("WAGON", "~~~~~~~~~~~!BOXES~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "~~~~~~~~~~~BOXES~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "~~~~~~~~~~~BOXES~~~~~~~~~~~~~~~");
+		Log.i("WAGON", "                           ~");
+		Log.i("WAGON", "~~~~~~~~~~~CRATES~~~~~~~~~~~~~~~");
+		Log.i("WAGON", "~~~~~~~~~~~CRATES~~~~~~~~~~~~~~~");
+		crateExample.print();
+
+		Log.i("WAGON", "~~~~~~~~~~~CRATES~~~~~~~~~~~~~~~");
+		Log.i("WAGON", "~~~~~~~~~~~CRATES~~~~~~~~~~~~~~~");
+		Log.i("WAGON", "                           ~");
 		Log.i("WAGON", "~~~~~~~~~~~END~~~~~~~~~~~~~~~");
 
 	}
