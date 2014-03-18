@@ -117,21 +117,17 @@ public class Wagon<E> {
 		boolean itWorked = false;
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			ArrayList<String> value = extras.getStringArrayList(key);
-			try {
-				field.set(instance, value);
-			} catch (Exception e) {
-				e.printStackTrace();
-				itWorked = false;
-			}
+			itWorked = extractArrayList(extras, field, key, instance, itWorked);
 		} else if (type.equals(String.class)) {
-			String value = extras.getString(key);
-			try {
-				field.set(instance, value);
-			} catch (Exception e) {
-				e.printStackTrace();
-				itWorked = false;
-			}
+			itWorked = extractString(extras, field, key, instance, itWorked);
+		} else if (type.equals(int.class) || type.equals(Integer.class)) {
+			itWorked = extractInt(extras, field, key, instance, itWorked);
+		} else if (type.equals(float.class) || type.equals(Float.class)) {
+			itWorked = extractFloat(extras, field, key, instance, itWorked);
+		} else if (type.equals(double.class) || type.equals(Double.class)) {
+			itWorked = extractDouble(extras, field, key, instance, itWorked);
+		} else if (type.equals(long.class) || type.equals(long.class)) {
+			itWorked = extractLong(extras, field, key, instance, itWorked);
 		}
 		return itWorked;
 	}
@@ -151,6 +147,62 @@ public class Wagon<E> {
 			itWorked = collectArrayList(intent, field, key, instance);
 		} else if (type.equals(String.class)) {
 			itWorked = collectString(intent, field, key, instance);
+		} else if (type.equals(int.class) || type.equals(Integer.class)) {
+			itWorked = collectInt(intent, field, key, instance);
+		} else if (type.equals(float.class) || type.equals(Float.class)) {
+			itWorked = collectFloat(intent, field, key, instance);
+		} else if (type.equals(double.class) || type.equals(Double.class)) {
+			itWorked = collectDouble(intent, field, key, instance);
+		} else if (type.equals(long.class) || type.equals(long.class)) {
+			itWorked = collectLong(intent, field, key, instance);
+		}
+		return itWorked;
+	}
+
+	private boolean collectLong(Intent intent, Field field, String key, Object instance) {
+		boolean itWorked = true;
+		try {
+			long v = (Long) field.get(instance);
+			intent.putExtra(key, v);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean collectDouble(Intent intent, Field field, String key, Object instance) {
+		boolean itWorked = true;
+		try {
+			double v = (Double) field.get(instance);
+			intent.putExtra(key, v);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean collectFloat(Intent intent, Field field, String key, Object instance) {
+		boolean itWorked = true;
+		try {
+			float v = (Float) field.get(instance);
+			intent.putExtra(key, v);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean collectInt(Intent intent, Field field, String key, Object instance) {
+		boolean itWorked = true;
+		try {
+			int v = (Integer) field.get(instance);
+			intent.putExtra(key, v);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
 		}
 		return itWorked;
 	}
@@ -179,4 +231,69 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
+	private boolean extractArrayList(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		ArrayList<String> value = extras.getStringArrayList(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean extractString(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		String value = extras.getString(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean extractInt(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		int value = extras.getInt(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean extractFloat(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		float value = extras.getFloat(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean extractDouble(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		double value = extras.getDouble(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
+
+	private boolean extractLong(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+		long value = extras.getLong(key);
+		try {
+			field.set(instance, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
+	}
 }
