@@ -22,7 +22,7 @@ Wagon
 	//...
 }
 ```
-####Pack your boxes in the wagon and start the next activity:
+####Pack your wagon and start the next activity:
 ```Java
 	private void startNextAcitivity() {
 		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);//this==MainActivity
@@ -31,7 +31,7 @@ Wagon
 		startActivity(intent);
 	}
 ```
-####Unpack your boxes from the wagon:
+####Unpack your wagon:
 ```Java
 public class OtherActivity extends Activity {
 
@@ -56,3 +56,25 @@ public class OtherActivity extends Activity {
 	}
 }
 ```
+
+####CrateExample class used above
+public class CrateExample {
+
+	public ArrayList<String> theListInCrate = new ArrayList<String>() {
+		{
+			add("listInsideCrate0");
+			add("listInsideCrate1");
+			add("listInsideCrate2");
+		}
+	};
+
+	public String theStringInCrate = "stringInsideCrate";
+
+	public void print() {
+		for (String string : theListInCrate) {
+			Log.i("CrateExampletheList", string);
+		}
+		Log.i("CrateExampletheString", theStringInCrate);
+	}
+}
+
