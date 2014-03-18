@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.aj.wagon.Crate;
 import com.aj.wagon.R;
 import com.aj.wagon.R.id;
 import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
 
 public class MainActivity extends Activity {
+
+	@Crate(key = "theCrate")
+	public CrateExample crateExample;
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>() {
@@ -31,7 +35,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		crateExample = new CrateExample();
 		((TextView) findViewById(id.tv)).setText("Main");
 
 		startNextAcitivity();

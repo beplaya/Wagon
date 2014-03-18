@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.aj.wagon.Crate;
 import com.aj.wagon.R;
 import com.aj.wagon.R.id;
 import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
 
 public class OtherActivity extends Activity {
+
+	@Crate
+	public CrateExample crateExample;
+
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>();
 
