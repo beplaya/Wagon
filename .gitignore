@@ -1,3 +1,6 @@
+#special libs
+units/libs
+
 # built application files
 *.apk
 *.ap_
