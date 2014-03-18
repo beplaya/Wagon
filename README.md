@@ -6,7 +6,7 @@ Wagon
 ##How To Use:
 Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' doesn't exist, create it at the same level as 'src'.
 
-##Example
+##Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
 
 ####Annotate which fields you'd like to put in the wagon:
 ```Java
