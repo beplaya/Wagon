@@ -8,7 +8,13 @@ Wagon
 
 ####Annotate which fields you'd like to put in the wagon:
 ```Java
-  public class MainActivity extends Activity {
+
+  	public class MainActivity extends Activity {
+	// All fields in crates will be copied to
+	// another instance in the next activity
+	@Crate(key = "theCrate")
+	public CrateExample crateExample = new CrateExample();
+	
 	@WoodBox(key = "theString")
 	public String sTRING = "I'm a string";
 	@WoodBox(key = "theList")
@@ -28,6 +34,13 @@ Wagon
 ####Unpack your boxes from the wagon:
 ```Java
 public class OtherActivity extends Activity {
+
+	//The crate from the last activity
+	//will be copied into this crate instance
+	//with the same field values
+	@Crate(key = "theCrate")
+	public CrateExample crateExample = new CrateExample();
+
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>();
 
