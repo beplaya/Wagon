@@ -94,10 +94,10 @@ public class CrateExample {
 #####E.G.
 ```Java
 	public class MainActivity extends Activity {
-	@WoodBox(key = "somePrimitive")
+	@WoodBox(key = "aBox")
 	public void float value = 42;
 
-	@Crate(key = "theCrate")
+	@Crate(key = "aCrate")
 	public CrateExample crateExample;
 	//...
 ```
@@ -108,7 +108,7 @@ public class CrateExample {
 	public void int number = 77;
 	public ArrayList<String> theListInCrate;
 
-	@Crate(key = "theNestedCrate")
+	@Crate(key = "aNestedCrate")
 	public NestedCrateExample nestedCrate;
 	//...
 }
