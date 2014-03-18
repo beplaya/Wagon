@@ -47,7 +47,6 @@ public class OtherActivity extends Activity {
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>();
-
 	@WoodBox(key = "theString")
 	public String sTRING = "";
 
