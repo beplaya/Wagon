@@ -26,12 +26,14 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 ```
 ####Pack your wagon and start the next activity:
 ```Java
+	//...
 	private void startNextAcitivity() {
 		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);//this==MainActivity
 		Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
 		wagon.pack(intent);
 		startActivity(intent);
 	}
+	//...
 ```
 ####Unpack your wagon:
 ```Java
@@ -56,6 +58,7 @@ public class OtherActivity extends Activity {
 		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
 		wagon.unpack(getIntent());
 	}
+	//...
 }
 ```
 
@@ -77,14 +80,8 @@ public class CrateExample {
 		this.theStringInCrate = s;
 		this.numberInt = number;
 	}
+	//...
 
-	public void print() {
-		Log.i("", "" + numberInt);
-		for (String string : theListInCrate) {
-			Log.i("CrateExampletheList", string);
-		}
-		Log.i("CrateExampletheString", theStringInCrate);
-	}
 }
 ```
 
@@ -129,10 +126,6 @@ public class NestedCrateExample {
 		this.theFloat = f;
 		this.theLong = l;
 	}
-
-	public void print() {
-		Log.i("nested f", "" + theFloat);
-		Log.i("nested l", "" + theLong);
-	}
+	//...
 }
 ```
