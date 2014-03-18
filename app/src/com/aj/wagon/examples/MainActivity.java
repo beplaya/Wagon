@@ -16,7 +16,7 @@ import com.aj.wagon.WoodBox;
 public class MainActivity extends Activity {
 
 	@Crate(key = "theCrate")
-	public CrateExample __9_crateExample;
+	public CrateExample crateExample;
 
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>() {
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		__9_crateExample = new CrateExample();
+		crateExample = new CrateExample();
 		((TextView) findViewById(id.tv)).setText("Main");
 
 		startNextAcitivity();
