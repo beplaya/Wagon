@@ -106,10 +106,33 @@ public class CrateExample {
 
 	//No need to annotate as WoodBox.  Already considered one.
 	public void int number = 77;
+	//No need to annotate as WoodBox.  Already considered one.
 	public ArrayList<String> theListInCrate;
 
 	@Crate(key = "aNestedCrate")
 	public NestedCrateExample nestedCrate;
 	//...
+}
+```
+```Java
+public class NestedCrateExample {
+
+	//No need to annotate as WoodBox.  Already considered one.
+	public float theFloat;
+	//No need to annotate as WoodBox.  Already considered one.
+	public long theLong;
+
+	public NestedCrateExample() {
+	}
+
+	public NestedCrateExample(float f, long l) {
+		this.theFloat = f;
+		this.theLong = l;
+	}
+
+	public void print() {
+		Log.i("nested f", "" + theFloat);
+		Log.i("nested l", "" + theLong);
+	}
 }
 ```
