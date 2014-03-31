@@ -44,6 +44,7 @@ public class Wagon<E> {
 	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
+		Collector collector = new Collector();
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
@@ -60,7 +61,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || packAllFields) {
 					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(intent, itWorked, field, annotation, key, instance);
+					itWorked = gatherBoxes(intent, collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -81,6 +82,7 @@ public class Wagon<E> {
 	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
+		Extractor extractor = new Extractor();
 		if (extras != null) {
 			Field[] declaredFields = objTypeToPack.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -100,7 +102,7 @@ public class Wagon<E> {
 						}
 					} else if (annotation instanceof WoodBox || unpackAllFields) {
 						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-						itWorked = upackBox(extras, field, annotation, key, instance);
+						itWorked = upackBox(extras, extractor, field, annotation, key, instance);
 					}
 				}
 			}
@@ -109,21 +111,21 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean upackBox(Bundle extras, Field field, Annotation annotation, String key, Object instance) {
+	private boolean upackBox(Bundle extras, Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
 		boolean itWorked = false;
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = extractArrayList(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractArrayList(extras, field, key, instance, itWorked);
 		} else if (type.equals(String.class)) {
-			itWorked = extractString(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractString(extras, field, key, instance, itWorked);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = extractInt(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractInt(extras, field, key, instance, itWorked);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = extractFloat(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractFloat(extras, field, key, instance, itWorked);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = extractDouble(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractDouble(extras, field, key, instance, itWorked);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = extractLong(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractLong(extras, field, key, instance, itWorked);
 		}
 		return itWorked;
 	}
@@ -137,159 +139,22 @@ public class Wagon<E> {
 		return key;
 	}
 
-	private boolean gatherBoxes(Intent intent, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
+	private boolean gatherBoxes(Intent intent, Collector collector, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = collectArrayList(intent, field, key, instance);
+			itWorked = collector.collectArrayList(intent, field, key, instance);
 		} else if (type.equals(String.class)) {
-			itWorked = collectString(intent, field, key, instance);
+			itWorked = collector.collectString(intent, field, key, instance);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = collectInt(intent, field, key, instance);
+			itWorked = collector.collectInt(intent, field, key, instance);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = collectFloat(intent, field, key, instance);
+			itWorked = collector.collectFloat(intent, field, key, instance);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = collectDouble(intent, field, key, instance);
+			itWorked = collector.collectDouble(intent, field, key, instance);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = collectLong(intent, field, key, instance);
+			itWorked = collector.collectLong(intent, field, key, instance);
 		}
 		return itWorked;
 	}
 
-	private boolean collectLong(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			long v = (Long) field.get(instance);
-			intent.putExtra(key, v);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean collectDouble(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			double v = (Double) field.get(instance);
-			intent.putExtra(key, v);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean collectFloat(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			float v = (Float) field.get(instance);
-			intent.putExtra(key, v);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean collectInt(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			int v = (Integer) field.get(instance);
-			intent.putExtra(key, v);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean collectString(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			String s = (String) field.get(instance);
-			intent.putExtra(key, s);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean collectArrayList(Intent intent, Field field, String key, Object instance) {
-		boolean itWorked = true;
-		try {
-			ArrayList<String> alist = (ArrayList<String>) field.get(instance);
-			intent.putExtra(key, alist);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractArrayList(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		ArrayList<String> value = extras.getStringArrayList(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractString(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		String value = extras.getString(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractInt(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		int value = extras.getInt(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractFloat(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		float value = extras.getFloat(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractDouble(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		double value = extras.getDouble(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
-
-	private boolean extractLong(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
-		long value = extras.getLong(key);
-		try {
-			field.set(instance, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			itWorked = false;
-		}
-		return itWorked;
-	}
 }
