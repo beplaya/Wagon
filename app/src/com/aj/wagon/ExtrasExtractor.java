@@ -5,8 +5,14 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 
-public class ExtrasExtractor {
-	boolean extractArrayList(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+public class ExtrasExtractor extends Extractor {
+	private Bundle extras;
+
+	public ExtrasExtractor(Bundle extras) {
+		this.extras = extras;
+	}
+
+	boolean extractArrayList(Field field, String key, Object instance, boolean itWorked) {
 		ArrayList<String> value = extras.getStringArrayList(key);
 		try {
 			field.set(instance, value);
@@ -17,7 +23,7 @@ public class ExtrasExtractor {
 		return itWorked;
 	}
 
-	boolean extractString(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+	boolean extractString(Field field, String key, Object instance, boolean itWorked) {
 		String value = extras.getString(key);
 		try {
 			field.set(instance, value);
@@ -28,7 +34,7 @@ public class ExtrasExtractor {
 		return itWorked;
 	}
 
-	boolean extractInt(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+	boolean extractInt(Field field, String key, Object instance, boolean itWorked) {
 		int value = extras.getInt(key);
 		try {
 			field.set(instance, value);
@@ -39,7 +45,7 @@ public class ExtrasExtractor {
 		return itWorked;
 	}
 
-	boolean extractFloat(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+	boolean extractFloat(Field field, String key, Object instance, boolean itWorked) {
 		float value = extras.getFloat(key);
 		try {
 			field.set(instance, value);
@@ -50,7 +56,7 @@ public class ExtrasExtractor {
 		return itWorked;
 	}
 
-	boolean extractDouble(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+	boolean extractDouble(Field field, String key, Object instance, boolean itWorked) {
 		double value = extras.getDouble(key);
 		try {
 			field.set(instance, value);
@@ -61,7 +67,7 @@ public class ExtrasExtractor {
 		return itWorked;
 	}
 
-	boolean extractLong(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
+	boolean extractLong(Field field, String key, Object instance, boolean itWorked) {
 		long value = extras.getLong(key);
 		try {
 			field.set(instance, value);

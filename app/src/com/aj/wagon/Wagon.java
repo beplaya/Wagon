@@ -82,7 +82,7 @@ public class Wagon<E> {
 	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
-		ExtrasExtractor extractor = new ExtrasExtractor();
+		Extractor extractor = new ExtrasExtractor(extras);
 		if (extras != null) {
 			Field[] declaredFields = objTypeToPack.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -102,7 +102,7 @@ public class Wagon<E> {
 						}
 					} else if (annotation instanceof WoodBox || unpackAllFields) {
 						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-						itWorked = upackBox(extras, extractor, field, annotation, key, instance);
+						itWorked = upackBox(extractor, field, annotation, key, instance);
 					}
 				}
 			}
@@ -111,21 +111,21 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean upackBox(Bundle extras, ExtrasExtractor extractor, Field field, Annotation annotation, String key, Object instance) {
+	private boolean upackBox(Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
 		boolean itWorked = false;
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = extractor.extractArrayList(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractArrayList(field, key, instance, itWorked);
 		} else if (type.equals(String.class)) {
-			itWorked = extractor.extractString(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractString(field, key, instance, itWorked);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = extractor.extractInt(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractInt(field, key, instance, itWorked);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = extractor.extractFloat(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractFloat(field, key, instance, itWorked);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = extractor.extractDouble(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractDouble(field, key, instance, itWorked);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = extractor.extractLong(extras, field, key, instance, itWorked);
+			itWorked = extractor.extractLong(field, key, instance, itWorked);
 		}
 		return itWorked;
 	}
