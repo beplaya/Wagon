@@ -1,7 +1,6 @@
 package com.aj.wagon;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +10,8 @@ import android.content.SharedPreferences.Editor;
 
 public class PreferenceCollector extends Collector {
 
-	private static final String NUMBER_DELIM = ":";
+	public static final String NUMBER_DELIM = ":";
+	public static final String KEY_DOUBLE = "KEY_DOUBLE";
 
 	private SharedPreferences preferences;
 
@@ -49,22 +49,49 @@ public class PreferenceCollector extends Collector {
 
 	@Override
 	boolean collectLong(Field field, String key, Object instance) {
-		return collectNumberAsString(field, key, instance, Long.class);
+		boolean itWorked = true;
+		try {
+			SharedPreferences.Editor editor = getEditor();
+			editor.putLong(key, (Long) (field.get(instance)));
+			editor.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
 	}
 
 	@Override
 	boolean collectDouble(Field field, String key, Object instance) {
-		return collectNumberAsString(field, key, instance, Double.class);
+		return collectDoubleAsString(field, key, instance);
 	}
 
 	@Override
 	boolean collectFloat(Field field, String key, Object instance) {
-		return collectNumberAsString(field, key, instance, Float.class);
+		boolean itWorked = true;
+		try {
+			SharedPreferences.Editor editor = getEditor();
+			editor.putFloat(key, (Float) (field.get(instance)));
+			editor.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
 	}
 
 	@Override
 	boolean collectInt(Field field, String key, Object instance) {
-		return collectNumberAsString(field, key, instance, Integer.class);
+		boolean itWorked = true;
+		try {
+			SharedPreferences.Editor editor = getEditor();
+			editor.putInt(key, (Integer) (field.get(instance)));
+			editor.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			itWorked = false;
+		}
+		return itWorked;
 	}
 
 	private Set<String> setFromList(ArrayList<String> list) {
@@ -75,11 +102,11 @@ public class PreferenceCollector extends Collector {
 		return preferences.edit();
 	}
 
-	private boolean collectNumberAsString(Field field, String key, Object instance, Type type) {
+	private boolean collectDoubleAsString(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
 			SharedPreferences.Editor editor = getEditor();
-			editor.putString(key, type.getClass().getSimpleName() + NUMBER_DELIM + field.get(instance).toString());
+			editor.putString(key, KEY_DOUBLE + NUMBER_DELIM + ((Double) field.get(instance)));
 			editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
