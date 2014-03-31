@@ -1,6 +1,6 @@
 #Wagon
 
-#####A no fuss method of passing extras between Android Activities using annotations. (Also WIP: save/load preferences using annotations)
+#####A no fuss method of passing extras between Android Activities using annotations. (Also in 1.04 beta: save/load preferences using annotations)
 
 ![](https://raw.githubusercontent.com/beplaya/Wagon/master/wagon_100.png)
 ##How To Use:
@@ -130,4 +130,17 @@ public class NestedCrateExample {
 	}
 	//...
 }
+```
+
+####SharedPreferences [beta]
+#####Just like extras, Wagon can pass annotated fields to SharedPreferences:
+```Java
+	...
+	@WoodBox(key = "myPreferenceCrate")
+	public CrateExample crate;
+	@WoodBox(key = "myPreferenceString")
+	public String value;
+	...
+	wagon.pack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
+	...
 ```
