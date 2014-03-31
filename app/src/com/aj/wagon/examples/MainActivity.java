@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,6 +19,8 @@ import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
 
 public class MainActivity extends Activity {
+
+	public static final String PREFERENCES_NAME = "prefName";
 
 	// All fields in crates will be copied to
 	// another instance in the next activity
@@ -52,17 +53,23 @@ public class MainActivity extends Activity {
 	private Button btnLoad;
 	private Button btnStartNext;
 	private EditText etValue;
+	private TextView tvTheFloat;
 	private Wagon<MainActivity> wagon;
+	private TextView tvList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		value = "default";
 		setContentView(R.layout.activity_main);
+		wagon = new Wagon<MainActivity>(this.getClass(), this);
+
 		((TextView) findViewById(id.tv_title)).setText("Main");
 		btnSave = (Button) findViewById(id.btn_save_prefs);
 		btnLoad = (Button) findViewById(id.btn_load_prefs);
 		btnStartNext = (Button) findViewById(id.btn_start_next);
+		tvTheFloat = (TextView) findViewById(id.tv_float);
+		tvList = (TextView) findViewById(id.tv_list);
 		btnSave.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
@@ -80,14 +87,25 @@ public class MainActivity extends Activity {
 		});
 
 		etValue = (EditText) findViewById(id.etValue);
-		etValue.setText(value);
+		updateView();
 		//
-		wagon = new Wagon<MainActivity>(this.getClass(), this);
+
+	}
+
+	private void updateView() {
+		String listToString = "theList: [";
+		for (String string : lIST) {
+			listToString += "(" + string + ")";
+		}
+		listToString += "]";
+		tvList.setText(listToString);
+		etValue.setText(value);
+		tvTheFloat.setText("The float in the nested crate: " + crateExample.nestedCrate.theFloat);
 	}
 
 	private void load() {
 		String msg = "";
-		if (wagon.unpack(getPreferences(MODE_PRIVATE))) {
+		if (wagon.unpack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE))) {
 			msg = "Loaded Preferences!";
 		} else {
 			msg = "Problem Loading!";
@@ -95,16 +113,13 @@ public class MainActivity extends Activity {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 		etValue.setText(value);
 
-		Log.i("", "LIST");
-		for (String s : lIST) {
-			Log.i("", s);
-		}
+		updateView();
 	}
 
 	private void save() {
 		String msg = "";
 		value = etValue.getText().toString();
-		if (wagon.pack(getPreferences(MODE_PRIVATE))) {
+		if (wagon.pack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE))) {
 			msg = "Saved Preferences!";
 		} else {
 			msg = "Problem saving!";

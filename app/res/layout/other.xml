@@ -18,10 +18,19 @@
     <TextView
         android:id="@+id/other_tv_list"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/other_tv_title"
         android:layout_marginTop="36dp"
         android:text="TextView" />
 
+    <TextView
+        android:id="@+id/other_tv_float"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/other_tv_list"
+        android:layout_alignRight="@+id/other_tv_list"
+        android:layout_below="@+id/other_tv_list"
+        android:text="TextView" />
+    
 </RelativeLayout>

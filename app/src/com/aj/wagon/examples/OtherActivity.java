@@ -26,25 +26,36 @@ public class OtherActivity extends Activity {
 	public String sTRING = "";
 
 	private TextView tvList;
+	private TextView tvTheFloat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.other);
-		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
-		if (!wagon.unpack(getIntent())) {
-			Toast.makeText(this, "Error unpacking wagon!", Toast.LENGTH_LONG).show();
-		}
+		unpack();
+
 		log();
+
 		((TextView) findViewById(id.other_tv_title)).setText("Other");
 
 		tvList = (TextView) findViewById(id.other_tv_list);
-		String listToString = "[";
+		tvTheFloat = (TextView) findViewById(id.other_tv_float);
+
+		tvTheFloat.setText("The float in the nested crate: " + crateExample.nestedCrate.theFloat);
+
+		String listToString = "theList: [";
 		for (String string : lIST) {
 			listToString += "(" + string + ")";
 		}
 		listToString += "]";
 		tvList.setText(listToString);
+	}
+
+	private void unpack() {
+		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
+		if (!wagon.unpack(getIntent())) {
+			Toast.makeText(this, "Error unpacking wagon!", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private void log() {
