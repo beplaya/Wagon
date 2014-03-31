@@ -24,7 +24,9 @@ public class PreferenceCollector extends Collector {
 		boolean itWorked = true;
 		try {
 			SharedPreferences.Editor editor = getEditor();
-			editor.putString(key, (String) field.get(instance));
+			String value = (String) field.get(instance);
+			System.out.println("##############" + value);
+			editor.putString(key, value);
 			editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

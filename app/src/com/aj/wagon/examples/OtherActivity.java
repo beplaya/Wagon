@@ -31,7 +31,7 @@ public class OtherActivity extends Activity {
 		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
 		wagon.unpack(getIntent());
 
-		((TextView) findViewById(id.tv)).setText("Other");
+		((TextView) findViewById(id.tv_title)).setText("Other");
 
 		Log.i("WAGON", "~~~~~~~~~~~START~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "                           ~");

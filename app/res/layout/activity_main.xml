@@ -9,9 +9,38 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView" />
+
+    <EditText
+        android:id="@+id/etValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/btn_save_prefs"
+        android:ems="10" >
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_save_prefs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@+id/etValue"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/btn_start_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_save_prefs"
+        android:layout_marginTop="36dp"
+        android:layout_toRightOf="@+id/tv_title"
+        android:text="Start Next Activity" />
 
 </RelativeLayout>

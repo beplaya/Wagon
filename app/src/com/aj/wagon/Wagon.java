@@ -158,7 +158,11 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	public boolean save(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
+	public boolean pack(SharedPreferences preferences) {
+		return pack(preferences, objType, obj, false, null);
+	}
+
+	public boolean pack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
 		Collector collector = new PreferenceCollector(preferences);
@@ -171,7 +175,7 @@ public class Wagon<E> {
 					try {
 						Object instanceOfCrate = field.get(instance);
 						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = save(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+						itWorked = pack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
 					} catch (Exception e) {
 						e.printStackTrace();
 						itWorked = false;
@@ -186,7 +190,11 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	public boolean load(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
+	public boolean unpack(SharedPreferences preferences) {
+		return unpack(preferences, objType, obj, false, null);
+	}
+
+	public boolean unpack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Extractor extractor = new PreferenceExtractor<E>(preferences);
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
@@ -200,7 +208,7 @@ public class Wagon<E> {
 					try {
 						Object instanceOfCrate = field.get(instance);
 						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = load(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+						itWorked = unpack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
 					} catch (Exception e) {
 						e.printStackTrace();
 						itWorked = false;
