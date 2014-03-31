@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class MainActivity extends Activity {
 	public String value;
 
 	private Button btnSave;
+	private Button btnLoad;
 	private Button btnStartNext;
 	private EditText etValue;
 	private Wagon<MainActivity> wagon;
@@ -59,10 +61,15 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		((TextView) findViewById(id.tv_title)).setText("Main");
 		btnSave = (Button) findViewById(id.btn_save_prefs);
+		btnLoad = (Button) findViewById(id.btn_load_prefs);
 		btnStartNext = (Button) findViewById(id.btn_start_next);
 		btnSave.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				save();
+			}
+		});
+		btnLoad.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
 				load();
 			}
 		});
@@ -73,9 +80,9 @@ public class MainActivity extends Activity {
 		});
 
 		etValue = (EditText) findViewById(id.etValue);
+		etValue.setText(value);
 		//
 		wagon = new Wagon<MainActivity>(this.getClass(), this);
-		load();
 	}
 
 	private void load() {
@@ -87,6 +94,11 @@ public class MainActivity extends Activity {
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 		etValue.setText(value);
+
+		Log.i("", "LIST");
+		for (String s : lIST) {
+			Log.i("", s);
+		}
 	}
 
 	private void save() {

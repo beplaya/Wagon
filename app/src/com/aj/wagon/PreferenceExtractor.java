@@ -12,7 +12,11 @@ public class PreferenceExtractor<E> extends Extractor {
 	@Override
 	boolean extractArrayList(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			Set<String> stringSet = ((SharedPreferences) preferences).getStringSet(key, new HashSet<String>());
+			Set<String> stringSet = ((SharedPreferences) preferences).getStringSet(key, new HashSet<String>() {
+				{
+					add("failure");
+				}
+			});
 			field.set(instance, new ArrayList<String>(stringSet));
 		} catch (Exception e) {
 			e.printStackTrace();

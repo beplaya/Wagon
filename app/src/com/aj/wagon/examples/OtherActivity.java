@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aj.wagon.Crate;
 import com.aj.wagon.R;
@@ -31,7 +32,9 @@ public class OtherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.other);
 		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
-		wagon.unpack(getIntent());
+		if (!wagon.unpack(getIntent())) {
+			Toast.makeText(this, "Error unpacking wagon!", Toast.LENGTH_LONG).show();
+		}
 		log();
 		((TextView) findViewById(id.other_tv_title)).setText("Other");
 
