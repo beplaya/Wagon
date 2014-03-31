@@ -136,7 +136,7 @@ public class NestedCrateExample {
 #####Just like extras, Wagon can pass annotated fields to SharedPreferences:
 ```Java
 	...
-	@WoodBox(key = "myPreferenceCrate")
+	@Crate(key = "myPreferenceCrate")
 	public CrateExample crate;
 	@WoodBox(key = "myPreferenceString")
 	public String value;
