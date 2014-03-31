@@ -141,6 +141,6 @@ public class NestedCrateExample {
 	@WoodBox(key = "myPreferenceString")
 	public String value;
 	...
-	wagon.pack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
+	wagon.pack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE));
 	...
 ```
