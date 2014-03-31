@@ -45,7 +45,7 @@ public class Wagon<E> {
 	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
-		ExtrasCollector collector = new ExtrasCollector(intent);
+		Collector collector = new ExtrasCollector();
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
@@ -62,7 +62,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || packAllFields) {
 					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(collector, itWorked, field, annotation, key, instance);
+					itWorked = gatherBoxes(intent, collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -83,7 +83,7 @@ public class Wagon<E> {
 	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
-		Extractor extractor = new ExtrasExtractor(extras);
+		Extractor extractor = new ExtrasExtractor();
 		if (extras != null) {
 			Field[] declaredFields = objTypeToPack.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -103,7 +103,7 @@ public class Wagon<E> {
 						}
 					} else if (annotation instanceof WoodBox || unpackAllFields) {
 						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-						itWorked = upackBox(extractor, field, annotation, key, instance);
+						itWorked = unpackBox(extras, extractor, field, annotation, key, instance);
 					}
 				}
 			}
@@ -112,21 +112,21 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean upackBox(Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
+	private boolean unpackBox(Object data, Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
 		boolean itWorked = false;
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = extractor.extractArrayList(field, key, instance, itWorked);
+			itWorked = extractor.extractArrayList(data, field, key, instance, itWorked);
 		} else if (type.equals(String.class)) {
-			itWorked = extractor.extractString(field, key, instance, itWorked);
+			itWorked = extractor.extractString(data, field, key, instance, itWorked);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = extractor.extractInt(field, key, instance, itWorked);
+			itWorked = extractor.extractInt(data, field, key, instance, itWorked);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = extractor.extractFloat(field, key, instance, itWorked);
+			itWorked = extractor.extractFloat(data, field, key, instance, itWorked);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = extractor.extractDouble(field, key, instance, itWorked);
+			itWorked = extractor.extractDouble(data, field, key, instance, itWorked);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = extractor.extractLong(field, key, instance, itWorked);
+			itWorked = extractor.extractLong(data, field, key, instance, itWorked);
 		}
 		return itWorked;
 	}
@@ -140,20 +140,20 @@ public class Wagon<E> {
 		return key;
 	}
 
-	private boolean gatherBoxes(Collector collector, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
+	private boolean gatherBoxes(Object data, Collector collector, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = collector.collectArrayList(field, key, instance);
+			itWorked = collector.collectArrayList(data, field, key, instance);
 		} else if (type.equals(String.class)) {
-			itWorked = collector.collectString(field, key, instance);
+			itWorked = collector.collectString(data, field, key, instance);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = collector.collectInt(field, key, instance);
+			itWorked = collector.collectInt(data, field, key, instance);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = collector.collectFloat(field, key, instance);
+			itWorked = collector.collectFloat(data, field, key, instance);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = collector.collectDouble(field, key, instance);
+			itWorked = collector.collectDouble(data, field, key, instance);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = collector.collectLong(field, key, instance);
+			itWorked = collector.collectLong(data, field, key, instance);
 		}
 		return itWorked;
 	}
@@ -165,7 +165,7 @@ public class Wagon<E> {
 	public boolean pack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
-		Collector collector = new PreferenceCollector(preferences);
+		Collector collector = new PreferenceCollector();
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
@@ -182,7 +182,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || packAllFields) {
 					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(collector, itWorked, field, annotation, key, instance);
+					itWorked = gatherBoxes(preferences, collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -196,7 +196,7 @@ public class Wagon<E> {
 
 	public boolean unpack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
-		Extractor extractor = new PreferenceExtractor<E>(preferences);
+		Extractor extractor = new PreferenceExtractor<E>();
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
@@ -215,7 +215,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || unpackAllFields) {
 					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = upackBox(extractor, field, annotation, key, instance);
+					itWorked = unpackBox(preferences, extractor, field, annotation, key, instance);
 				}
 			}
 		}

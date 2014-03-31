@@ -3,15 +3,15 @@ package com.aj.wagon;
 import java.lang.reflect.Field;
 
 public abstract class Collector {
-	abstract boolean collectString(Field field, String key, Object instance);
+	abstract boolean collectString(Object data, Field field, String key, Object instance);
 
-	abstract boolean collectArrayList(Field field, String key, Object instance);
+	abstract boolean collectArrayList(Object data, Field field, String key, Object instance);
 
-	abstract boolean collectLong(Field field, String key, Object instance);
+	abstract boolean collectLong(Object data, Field field, String key, Object instance);
 
-	abstract boolean collectDouble(Field field, String key, Object instance);
+	abstract boolean collectDouble(Object data, Field field, String key, Object instance);
 
-	abstract boolean collectFloat(Field field, String key, Object instance);
+	abstract boolean collectFloat(Object data, Field field, String key, Object instance);
 
-	abstract boolean collectInt(Field field, String key, Object instance);
+	abstract boolean collectInt(Object data, Field field, String key, Object instance);
 }

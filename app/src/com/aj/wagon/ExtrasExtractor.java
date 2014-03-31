@@ -5,15 +5,10 @@ import java.lang.reflect.Field;
 import android.os.Bundle;
 
 public class ExtrasExtractor extends Extractor {
-	private Bundle extras;
 
-	public ExtrasExtractor(Bundle extras) {
-		this.extras = extras;
-	}
-
-	boolean extractArrayList(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractArrayList(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getStringArrayList(key));
+			field.set(instance, ((Bundle) extras).getStringArrayList(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -21,9 +16,9 @@ public class ExtrasExtractor extends Extractor {
 		return itWorked;
 	}
 
-	boolean extractString(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractString(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getString(key));
+			field.set(instance, ((Bundle) extras).getString(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -31,9 +26,9 @@ public class ExtrasExtractor extends Extractor {
 		return itWorked;
 	}
 
-	boolean extractInt(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractInt(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getInt(key));
+			field.set(instance, ((Bundle) extras).getInt(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -41,9 +36,9 @@ public class ExtrasExtractor extends Extractor {
 		return itWorked;
 	}
 
-	boolean extractFloat(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractFloat(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getFloat(key));
+			field.set(instance, ((Bundle) extras).getFloat(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -51,9 +46,9 @@ public class ExtrasExtractor extends Extractor {
 		return itWorked;
 	}
 
-	boolean extractDouble(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractDouble(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getDouble(key));
+			field.set(instance, ((Bundle) extras).getDouble(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -61,13 +56,14 @@ public class ExtrasExtractor extends Extractor {
 		return itWorked;
 	}
 
-	boolean extractLong(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractLong(Object extras, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, extras.getLong(key));
+			field.set(instance, ((Bundle) extras).getLong(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
 		}
 		return itWorked;
 	}
+
 }

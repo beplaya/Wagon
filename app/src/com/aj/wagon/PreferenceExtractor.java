@@ -9,16 +9,10 @@ import android.content.SharedPreferences;
 
 public class PreferenceExtractor<E> extends Extractor {
 
-	private SharedPreferences preferences;
-
-	public PreferenceExtractor(SharedPreferences preferences) {
-		this.preferences = preferences;
-	}
-
 	@Override
-	boolean extractArrayList(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractArrayList(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			Set<String> stringSet = preferences.getStringSet(key, new HashSet<String>());
+			Set<String> stringSet = ((SharedPreferences) preferences).getStringSet(key, new HashSet<String>());
 			field.set(instance, new ArrayList<String>(stringSet));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -28,9 +22,9 @@ public class PreferenceExtractor<E> extends Extractor {
 	}
 
 	@Override
-	boolean extractString(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractString(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, preferences.getString(key, null));
+			field.set(instance, ((SharedPreferences) preferences).getString(key, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -39,9 +33,9 @@ public class PreferenceExtractor<E> extends Extractor {
 	}
 
 	@Override
-	boolean extractInt(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractInt(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, preferences.getInt(key, 0));
+			field.set(instance, ((SharedPreferences) preferences).getInt(key, 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -50,9 +44,9 @@ public class PreferenceExtractor<E> extends Extractor {
 	}
 
 	@Override
-	boolean extractFloat(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractFloat(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, preferences.getFloat(key, 0));
+			field.set(instance, ((SharedPreferences) preferences).getFloat(key, 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -61,9 +55,9 @@ public class PreferenceExtractor<E> extends Extractor {
 	}
 
 	@Override
-	boolean extractDouble(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractDouble(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			String value = preferences.getString(key, null);
+			String value = ((SharedPreferences) preferences).getString(key, null);
 			String[] split = value.split(PreferenceCollector.KEY_DOUBLE);
 			if (split[0].equalsIgnoreCase(Integer.class.getSimpleName())) {
 				field.set(instance, Double.parseDouble(split[1]));
@@ -76,9 +70,9 @@ public class PreferenceExtractor<E> extends Extractor {
 	}
 
 	@Override
-	boolean extractLong(Field field, String key, Object instance, boolean itWorked) {
+	boolean extractLong(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			field.set(instance, preferences.getLong(key, 0));
+			field.set(instance, ((SharedPreferences) preferences).getLong(key, 0));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
