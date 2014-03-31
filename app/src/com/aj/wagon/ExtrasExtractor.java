@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 
-public class Extractor {
+public class ExtrasExtractor {
 	boolean extractArrayList(Bundle extras, Field field, String key, Object instance, boolean itWorked) {
 		ArrayList<String> value = extras.getStringArrayList(key);
 		try {

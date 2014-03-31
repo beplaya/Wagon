@@ -44,7 +44,7 @@ public class Wagon<E> {
 	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
-		Collector collector = new Collector();
+		ExtrasCollector collector = new ExtrasCollector(intent);
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
@@ -61,7 +61,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || packAllFields) {
 					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(intent, collector, itWorked, field, annotation, key, instance);
+					itWorked = gatherBoxes(collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -82,7 +82,7 @@ public class Wagon<E> {
 	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
-		Extractor extractor = new Extractor();
+		ExtrasExtractor extractor = new ExtrasExtractor();
 		if (extras != null) {
 			Field[] declaredFields = objTypeToPack.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -111,7 +111,7 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean upackBox(Bundle extras, Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
+	private boolean upackBox(Bundle extras, ExtrasExtractor extractor, Field field, Annotation annotation, String key, Object instance) {
 		boolean itWorked = false;
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
@@ -139,20 +139,20 @@ public class Wagon<E> {
 		return key;
 	}
 
-	private boolean gatherBoxes(Intent intent, Collector collector, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
+	private boolean gatherBoxes(Collector collector, boolean itWorked, Field field, Annotation annotation, String key, Object instance) {
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
-			itWorked = collector.collectArrayList(intent, field, key, instance);
+			itWorked = collector.collectArrayList(field, key, instance);
 		} else if (type.equals(String.class)) {
-			itWorked = collector.collectString(intent, field, key, instance);
+			itWorked = collector.collectString(field, key, instance);
 		} else if (type.equals(int.class) || type.equals(Integer.class)) {
-			itWorked = collector.collectInt(intent, field, key, instance);
+			itWorked = collector.collectInt(field, key, instance);
 		} else if (type.equals(float.class) || type.equals(Float.class)) {
-			itWorked = collector.collectFloat(intent, field, key, instance);
+			itWorked = collector.collectFloat(field, key, instance);
 		} else if (type.equals(double.class) || type.equals(Double.class)) {
-			itWorked = collector.collectDouble(intent, field, key, instance);
+			itWorked = collector.collectDouble(field, key, instance);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
-			itWorked = collector.collectLong(intent, field, key, instance);
+			itWorked = collector.collectLong(field, key, instance);
 		}
 		return itWorked;
 	}
