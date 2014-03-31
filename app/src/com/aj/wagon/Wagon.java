@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 public class Wagon<E> {
@@ -157,4 +158,60 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
+	public boolean save(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
+		boolean itWorked = true;
+		Field[] declaredFields = objTypeToPack.getDeclaredFields();
+		Collector collector = new PreferenceCollector(preferences);
+		for (Field field : declaredFields) {
+			Annotation annotation = field.getAnnotation(WoodBox.class);
+			if (annotation == null)
+				annotation = field.getAnnotation(Crate.class);
+			if (shouldPackField(annotation) || packAllFields) {
+				if (annotation instanceof Crate) {
+					try {
+						Object instanceOfCrate = field.get(instance);
+						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+						itWorked = save(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+					} catch (Exception e) {
+						e.printStackTrace();
+						itWorked = false;
+					}
+				} else if (annotation instanceof WoodBox || packAllFields) {
+					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
+					itWorked = gatherBoxes(collector, itWorked, field, annotation, key, instance);
+				}
+			}
+		}
+
+		return itWorked;
+	}
+
+	public boolean load(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
+		boolean itWorked = true;
+		Extractor extractor = new PreferenceExtractor<E>(preferences);
+		Field[] declaredFields = objTypeToPack.getDeclaredFields();
+		for (Field field : declaredFields) {
+			Annotation annotation = field.getAnnotation(WoodBox.class);
+			if (annotation == null)
+				annotation = field.getAnnotation(Crate.class);
+
+			if (shouldPackField(annotation) || unpackAllFields) {
+				if (annotation instanceof Crate) {
+					try {
+						Object instanceOfCrate = field.get(instance);
+						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+						itWorked = load(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+					} catch (Exception e) {
+						e.printStackTrace();
+						itWorked = false;
+					}
+				} else if (annotation instanceof WoodBox || unpackAllFields) {
+					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+					itWorked = upackBox(extractor, field, annotation, key, instance);
+				}
+			}
+		}
+
+		return itWorked;
+	}
 }
