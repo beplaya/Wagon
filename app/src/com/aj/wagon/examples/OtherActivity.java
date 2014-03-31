@@ -24,15 +24,27 @@ public class OtherActivity extends Activity {
 	@WoodBox(key = "theString")
 	public String sTRING = "";
 
+	private TextView tvList;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.other);
 		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
 		wagon.unpack(getIntent());
+		log();
+		((TextView) findViewById(id.other_tv_title)).setText("Other");
 
-		((TextView) findViewById(id.tv_title)).setText("Other");
+		tvList = (TextView) findViewById(id.other_tv_list);
+		String listToString = "[";
+		for (String string : lIST) {
+			listToString += "(" + string + ")";
+		}
+		listToString += "]";
+		tvList.setText(listToString);
+	}
 
+	private void log() {
 		Log.i("WAGON", "~~~~~~~~~~~START~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "                           ~");
 		Log.i("WAGON", "~~~~~~~~~~~BOXES~~~~~~~~~~~~~~~");
@@ -54,6 +66,5 @@ public class OtherActivity extends Activity {
 		Log.i("WAGON", "~~~~~~~~~~~CRATES~~~~~~~~~~~~~~~");
 		Log.i("WAGON", "                           ~");
 		Log.i("WAGON", "~~~~~~~~~~~END~~~~~~~~~~~~~~~");
-
 	}
 }
