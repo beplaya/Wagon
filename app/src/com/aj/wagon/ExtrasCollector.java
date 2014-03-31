@@ -16,8 +16,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectString(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			String s = (String) field.get(instance);
-			intent.putExtra(key, s);
+			intent.putExtra(key, (String) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -28,8 +27,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectArrayList(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			ArrayList<String> alist = (ArrayList<String>) field.get(instance);
-			intent.putExtra(key, alist);
+			intent.putExtra(key, (ArrayList<String>) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -40,8 +38,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectLong(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			long v = (Long) field.get(instance);
-			intent.putExtra(key, v);
+			intent.putExtra(key, (Long) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -52,8 +49,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectDouble(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			double v = (Double) field.get(instance);
-			intent.putExtra(key, v);
+			intent.putExtra(key, (Double) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -64,8 +60,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectFloat(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			float v = (Float) field.get(instance);
-			intent.putExtra(key, v);
+			intent.putExtra(key, (Float) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -76,8 +71,7 @@ public class ExtrasCollector extends Collector {
 	boolean collectInt(Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			int v = (Integer) field.get(instance);
-			intent.putExtra(key, v);
+			intent.putExtra(key, (Integer) field.get(instance));
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
