@@ -45,11 +45,12 @@ public class MainActivity extends Activity {
 	public String sTRING = "I'm a string";
 
 	@WoodBox(key = "aValue")
-	public String value;
+	public String value = "default";
 
 	private Button btnSave;
 	private Button btnStartNext;
 	private EditText etValue;
+	private Wagon<MainActivity> wagon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +72,11 @@ public class MainActivity extends Activity {
 
 		etValue = (EditText) findViewById(id.etValue);
 		//
+		wagon = new Wagon<MainActivity>(this.getClass(), this);
 		load();
 	}
 
 	private void load() {
-		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);
 		String msg = "";
 		if (wagon.unpack(getPreferences(MODE_PRIVATE))) {
 			msg = "Loaded!";
@@ -87,7 +88,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void save() {
-		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);
 		String msg = "";
 		if (wagon.pack(getPreferences(MODE_PRIVATE))) {
 			msg = "Saved!";
@@ -98,7 +98,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void startNextAcitivity() {
-		Wagon<MainActivity> wagon = new Wagon<MainActivity>(this.getClass(), this);
 		final Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
 		wagon.pack(intent);
 

@@ -27,7 +27,7 @@ public class OtherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.other);
 		final Wagon<OtherActivity> wagon = new Wagon<OtherActivity>(this.getClass(), this);
 		wagon.unpack(getIntent());
 
