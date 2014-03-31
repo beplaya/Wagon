@@ -12,11 +12,7 @@ public class PreferenceExtractor<E> extends Extractor {
 	@Override
 	boolean extractArrayList(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
-			Set<String> stringSet = ((SharedPreferences) preferences).getStringSet(key, new HashSet<String>() {
-				{
-					add("failure");
-				}
-			});
+			Set<String> stringSet = ((SharedPreferences) preferences).getStringSet(key, new HashSet<String>());
 			field.set(instance, new ArrayList<String>(stringSet));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,8 +58,8 @@ public class PreferenceExtractor<E> extends Extractor {
 	boolean extractDouble(Object preferences, Field field, String key, Object instance, boolean itWorked) {
 		try {
 			String value = ((SharedPreferences) preferences).getString(key, null);
-			String[] split = value.split(PreferenceCollector.KEY_DOUBLE);
-			if (split[0].equalsIgnoreCase(Integer.class.getSimpleName())) {
+			String[] split = value.split(PreferenceCollector.DELIM);
+			if (split[0].equalsIgnoreCase(PreferenceCollector.KEY_DOUBLE)) {
 				field.set(instance, Double.parseDouble(split[1]));
 			}
 		} catch (Exception e) {

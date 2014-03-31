@@ -3,14 +3,13 @@ package com.aj.wagon;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class PreferenceCollector extends Collector {
 
-	public static final String NUMBER_DELIM = ":";
+	public static final String DELIM = "$$@#_!:";
 	public static final String KEY_DOUBLE = "KEY_DOUBLE";
 
 	@Override
@@ -20,7 +19,7 @@ public class PreferenceCollector extends Collector {
 			SharedPreferences.Editor editor = getEditor(preferences);
 			String value = (String) field.get(instance);
 			editor.putString(key, value);
-			editor.commit();
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -33,8 +32,8 @@ public class PreferenceCollector extends Collector {
 		boolean itWorked = true;
 		try {
 			Editor editor = getEditor(preferences);
-			editor.putStringSet(key, setFromList((ArrayList<String>) field.get(instance)));
-
+			editor.putStringSet(key, new HashSet<String>((ArrayList<String>) field.get(instance)));
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -48,7 +47,7 @@ public class PreferenceCollector extends Collector {
 		try {
 			SharedPreferences.Editor editor = getEditor(preferences);
 			editor.putLong(key, (Long) (field.get(instance)));
-			editor.commit();
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -67,7 +66,7 @@ public class PreferenceCollector extends Collector {
 		try {
 			SharedPreferences.Editor editor = getEditor(preferences);
 			editor.putFloat(key, (Float) (field.get(instance)));
-			editor.commit();
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
@@ -81,16 +80,12 @@ public class PreferenceCollector extends Collector {
 		try {
 			SharedPreferences.Editor editor = getEditor(preferences);
 			editor.putInt(key, (Integer) (field.get(instance)));
-			editor.commit();
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;
 		}
 		return itWorked;
-	}
-
-	private Set<String> setFromList(ArrayList<String> list) {
-		return new HashSet<String>(list);
 	}
 
 	private Editor getEditor(Object preferences) {
@@ -100,8 +95,8 @@ public class PreferenceCollector extends Collector {
 	private boolean collectDoubleAsString(SharedPreferences.Editor editor, Field field, String key, Object instance) {
 		boolean itWorked = true;
 		try {
-			editor.putString(key, KEY_DOUBLE + NUMBER_DELIM + ((Double) field.get(instance)));
-			editor.commit();
+			editor.putString(key, KEY_DOUBLE + DELIM + ((Double) field.get(instance)));
+			itWorked = editor.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			itWorked = false;

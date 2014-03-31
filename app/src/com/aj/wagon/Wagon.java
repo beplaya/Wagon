@@ -3,8 +3,6 @@ package com.aj.wagon;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.prefs.Preferences;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -128,8 +126,6 @@ public class Wagon<E> {
 			itWorked = extractor.extractDouble(data, field, key, instance, itWorked);
 		} else if (type.equals(long.class) || type.equals(long.class)) {
 			itWorked = extractor.extractLong(data, field, key, instance, itWorked);
-		} else if (type.equals(Set.class) && data instanceof Preferences) {
-			itWorked = extractor.extractArrayList(data, field, key, instance, itWorked);
 		}
 		return itWorked;
 	}
