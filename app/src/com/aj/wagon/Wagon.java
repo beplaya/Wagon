@@ -103,7 +103,7 @@ public class Wagon<E> {
 						}
 					} else if (annotation instanceof WoodBox || unpackAllFields) {
 						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-						itWorked = unpackBox(extras, extractor, field, annotation, key, instance);
+						itWorked = unpackBox(extras, extractor, field, annotation, key, instance, itWorked);
 					}
 				}
 			}
@@ -112,8 +112,7 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean unpackBox(Object data, Extractor extractor, Field field, Annotation annotation, String key, Object instance) {
-		boolean itWorked = false;
+	private boolean unpackBox(Object data, Extractor extractor, Field field, Annotation annotation, String key, Object instance, boolean itWorked) {
 		Class<?> type = field.getType();
 		if (type.equals(ArrayList.class)) {
 			itWorked = extractor.extractArrayList(data, field, key, instance, itWorked);
@@ -215,7 +214,7 @@ public class Wagon<E> {
 					}
 				} else if (annotation instanceof WoodBox || unpackAllFields) {
 					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = unpackBox(preferences, extractor, field, annotation, key, instance);
+					itWorked = unpackBox(preferences, extractor, field, annotation, key, instance, itWorked);
 				}
 			}
 		}
