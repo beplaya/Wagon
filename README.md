@@ -7,8 +7,10 @@
 Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' doesn't exist, create it at the same level as 'src'.
 
 ##News:
-Wagon 1.05 beta: preferences save and load requires preference=true attribute.  1.04 skipped.
-Wagon 1.04 beta released: Save and load WoodBoxes and Crates as SharedPreferences "SP" with wagon.pack(SP)/unpack(SP).
+*Wagon 1.05 beta: preferences save and load requires preference=true attribute.  
+..*1.04 skipped.
+*Wagon 1.04 beta released: 
+..*Save and load WoodBoxes and Crates as SharedPreferences "SP" with wagon.pack(SP)/unpack(SP).
 
 ##Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
 
