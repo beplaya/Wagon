@@ -1,4 +1,4 @@
-package com.aj.wagon.examples;
+package com.aj.wagon.sample;
 
 import java.util.ArrayList;
 
@@ -9,10 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aj.wagon.Crate;
-import com.aj.wagon.R;
-import com.aj.wagon.R.id;
 import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
+import com.aj.wagon.sample.R.id;
+import com.aj.wagon.sample.R.layout;
 
 public class OtherActivity extends Activity {
 
@@ -31,12 +31,12 @@ public class OtherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.other);
+		setContentView(layout.other);
 		unpack();
 
 		log();
 
-		((TextView) findViewById(id.other_tv_title)).setText("Other");
+		((TextView) findViewById(id.other_tv_title)).setText("Other Activity using Wagon v" + Wagon.VERSION);
 
 		tvList = (TextView) findViewById(id.other_tv_list);
 		tvTheFloat = (TextView) findViewById(id.other_tv_float);

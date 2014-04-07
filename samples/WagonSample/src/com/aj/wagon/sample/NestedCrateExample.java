@@ -1,4 +1,4 @@
-package com.aj.wagon.examples;
+package com.aj.wagon.sample;
 
 import android.util.Log;
 

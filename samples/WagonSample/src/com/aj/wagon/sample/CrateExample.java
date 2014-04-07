@@ -1,4 +1,4 @@
-package com.aj.wagon.examples;
+package com.aj.wagon.sample;
 
 import java.util.ArrayList;
 

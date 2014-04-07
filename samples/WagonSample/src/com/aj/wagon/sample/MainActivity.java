@@ -1,4 +1,4 @@
-package com.aj.wagon.examples;
+package com.aj.wagon.sample;
 
 import java.util.ArrayList;
 
@@ -13,10 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aj.wagon.Crate;
-import com.aj.wagon.R;
-import com.aj.wagon.R.id;
 import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
+import com.aj.wagon.sample.R.id;
 
 public class MainActivity extends Activity {
 
@@ -64,7 +63,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		wagon = new Wagon<MainActivity>(this.getClass(), this);
 
-		((TextView) findViewById(id.tv_title)).setText("Main");
+		((TextView) findViewById(id.tv_title)).setText("Main Activity using Wagon v" + Wagon.VERSION);
 		btnSave = (Button) findViewById(id.btn_save_prefs);
 		btnLoad = (Button) findViewById(id.btn_load_prefs);
 		btnStartNext = (Button) findViewById(id.btn_start_next);
@@ -113,7 +112,7 @@ public class MainActivity extends Activity {
 			msg = "Problem Loading!";
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		if (!value.equals(oldValue))
+		if (!oldValue.equals(value))
 			etValue.setText(value);
 
 		updateView();
