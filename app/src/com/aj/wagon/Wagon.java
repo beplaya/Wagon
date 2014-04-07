@@ -50,7 +50,7 @@ public class Wagon<E> {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
 				annotation = field.getAnnotation(Crate.class);
-			if (shouldPackField(annotation) || packAllFields) {
+			if (isAPackableField(annotation) || packAllFields) {
 				if (annotation instanceof Crate) {
 					try {
 						Object instanceOfCrate = field.get(instance);
@@ -70,7 +70,7 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	private boolean shouldPackField(Annotation annotation) {
+	private boolean isAPackableField(Annotation annotation) {
 		if (annotation == null)
 			return false;
 		return annotation instanceof WoodBox || annotation instanceof Crate;
@@ -91,7 +91,7 @@ public class Wagon<E> {
 				if (annotation == null)
 					annotation = field.getAnnotation(Crate.class);
 
-				if (shouldPackField(annotation) || unpackAllFields) {
+				if (isAPackableField(annotation) || unpackAllFields) {
 					if (annotation instanceof Crate) {
 						try {
 							Object instanceOfCrate = field.get(instance);
@@ -158,10 +158,12 @@ public class Wagon<E> {
 	}
 
 	public boolean pack(SharedPreferences preferences) {
-		return pack(preferences, objType, obj, false, null);
+		return pack(preferences, objType, obj, false, null, 0);
 	}
 
-	public boolean pack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
+	public boolean pack(SharedPreferences preferences, Class<? extends Object> objTypeToPack,
+
+	Object instance, boolean packAllFields, String crateKey, int level) {
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
 		Collector collector = new PreferenceCollector();
@@ -169,19 +171,22 @@ public class Wagon<E> {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
 				annotation = field.getAnnotation(Crate.class);
-			if (shouldPackField(annotation) || packAllFields) {
-				if (annotation instanceof Crate) {
-					try {
-						Object instanceOfCrate = field.get(instance);
-						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = pack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
-					} catch (Exception e) {
-						e.printStackTrace();
-						itWorked = false;
+
+			if (isPackablePreference(level, annotation)) {
+				if (isAPackableField(annotation) || packAllFields) {
+					if (annotation instanceof Crate) {
+						try {
+							Object instanceOfCrate = field.get(instance);
+							Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+							itWorked = pack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation), level + 1);
+						} catch (Exception e) {
+							e.printStackTrace();
+							itWorked = false;
+						}
+					} else if (annotation instanceof WoodBox || packAllFields) {
+						String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
+						itWorked = gatherBoxes(preferences, collector, itWorked, field, annotation, key, instance);
 					}
-				} else if (annotation instanceof WoodBox || packAllFields) {
-					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(preferences, collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -189,11 +194,27 @@ public class Wagon<E> {
 		return itWorked;
 	}
 
-	public boolean unpack(SharedPreferences preferences) {
-		return unpack(preferences, objType, obj, false, null);
+	private boolean isPackablePreference(int level, Annotation annotation) {
+		boolean shouldPackPreference = false;
+		if (level == 0) {
+			if (annotation != null) {
+				if (annotation instanceof Crate) {
+					shouldPackPreference = ((Crate) annotation).preference();
+				} else if (annotation instanceof WoodBox) {
+					shouldPackPreference = ((WoodBox) annotation).preference();
+				}
+			}
+		} else {
+			shouldPackPreference = true;
+		}
+		return shouldPackPreference;
 	}
 
-	public boolean unpack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
+	public boolean unpack(SharedPreferences preferences) {
+		return unpack(preferences, objType, obj, false, null, 0);
+	}
+
+	public boolean unpack(SharedPreferences preferences, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey, int level) {
 		boolean itWorked = true;
 		Extractor extractor = new PreferenceExtractor<E>();
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
@@ -201,20 +222,21 @@ public class Wagon<E> {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
 				annotation = field.getAnnotation(Crate.class);
-
-			if (shouldPackField(annotation) || unpackAllFields) {
-				if (annotation instanceof Crate) {
-					try {
-						Object instanceOfCrate = field.get(instance);
-						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = unpack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
-					} catch (Exception e) {
-						e.printStackTrace();
-						itWorked = false;
+			if (isPackablePreference(level, annotation)) {
+				if (isAPackableField(annotation) || unpackAllFields) {
+					if (annotation instanceof Crate) {
+						try {
+							Object instanceOfCrate = field.get(instance);
+							Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
+							itWorked = unpack(preferences, objTypeOfCrate, instanceOfCrate, true, getKey(annotation), level + 1);
+						} catch (Exception e) {
+							e.printStackTrace();
+							itWorked = false;
+						}
+					} else if (annotation instanceof WoodBox || unpackAllFields) {
+						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+						itWorked = unpackBox(preferences, extractor, field, annotation, key, instance, itWorked);
 					}
-				} else if (annotation instanceof WoodBox || unpackAllFields) {
-					String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = unpackBox(preferences, extractor, field, annotation, key, instance, itWorked);
 				}
 			}
 		}

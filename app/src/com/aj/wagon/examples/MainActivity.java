@@ -36,17 +36,17 @@ public class MainActivity extends Activity {
 	@WoodBox(key = "theList")
 	public ArrayList<String> lIST = new ArrayList<String>() {
 		{
-			add("dasds0");
-			add("dasds1");
-			add("dasds2");
-			add("dasds3");
+			add("listItem0");
+			add("listItem1");
+			add("listItem2");
+			add("listItem3");
 		}
 	};
 
 	@WoodBox(key = "theString")
 	public String sTRING = "I'm a string";
 
-	@WoodBox(key = "aValue")
+	@WoodBox(key = "aValue", preference = true)
 	public String value;
 
 	private Button btnSave;
@@ -94,8 +94,9 @@ public class MainActivity extends Activity {
 
 	private void updateView() {
 		String listToString = "theList: [";
-		for (String string : lIST) {
-			listToString += "(" + string + ")";
+		for (int i = 0; i < lIST.size(); i++) {
+			String string = lIST.get(i);
+			listToString += i + ":(" + string + ")";
 		}
 		listToString += "]";
 		tvList.setText(listToString);
@@ -105,13 +106,15 @@ public class MainActivity extends Activity {
 
 	private void load() {
 		String msg = "";
+		String oldValue = value;
 		if (wagon.unpack(getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE))) {
 			msg = "Loaded Preferences!";
 		} else {
 			msg = "Problem Loading!";
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		etValue.setText(value);
+		if (!value.equals(oldValue))
+			etValue.setText(value);
 
 		updateView();
 	}
@@ -124,6 +127,8 @@ public class MainActivity extends Activity {
 		} else {
 			msg = "Problem saving!";
 		}
+		value = "";// in order to prove value is loaded.
+
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 

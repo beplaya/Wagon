@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface WoodBox {
 
 	public String key();
+
+	public boolean preference() default false;
 }

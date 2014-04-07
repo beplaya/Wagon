@@ -44,8 +44,9 @@ public class OtherActivity extends Activity {
 		tvTheFloat.setText("The float in the nested crate: " + crateExample.nestedCrate.theFloat);
 
 		String listToString = "theList: [";
-		for (String string : lIST) {
-			listToString += "(" + string + ")";
+		for (int i = 0; i < lIST.size(); i++) {
+			String string = lIST.get(i);
+			listToString += i + ":(" + string + ")";
 		}
 		listToString += "]";
 		tvList.setText(listToString);

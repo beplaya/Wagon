@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface Crate {
 	public String key();
 
+	public boolean preference() default false;
 }
