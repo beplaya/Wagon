@@ -4,7 +4,7 @@ import com.aj.wagon.Crate;
 
 public class CrateHolder {
 
-	@Crate(key = "crateKey")
+	@Crate(key = "crateKey", preference = true)
 	public TestCrate testCrate;
 
 	public CrateHolder() {
