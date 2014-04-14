@@ -1,14 +1,14 @@
 #Wagon
 
-#####A no fuss method of passing extras between Android Activities using annotations. ([BETA 1.04+] save/load preferences using annotations)
+#####A no fuss method of passing extras between Android Activities and saving/loading preferences using annotations)
 
 ![](https://raw.githubusercontent.com/beplaya/Wagon/master/wagon_100.png)
 ##How To Use:
 Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' doesn't exist, create it at the same level as 'src'.
 
 ##News:
+*Wagon 1.10: Save/Load preferences released 
 *Wagon 1.05 beta: preferences save and load requires preference=true attribute.  
-..*1.04 skipped.
 *Wagon 1.04 beta released: 
 ..*Save and load WoodBoxes and Crates as SharedPreferences "SP" with wagon.pack(SP)/unpack(SP).
 
@@ -135,7 +135,7 @@ public class NestedCrateExample {
 }
 ```
 
-####SharedPreferences [beta]
+####SharedPreferences 
 #####Just like extras, Wagon can pass annotated fields to SharedPreferences:
 ```Java
 	...
