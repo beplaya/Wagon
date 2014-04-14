@@ -16,6 +16,8 @@ import com.aj.wagon.testobjects.NestedCrateHolder;
 
 @RunWith(TestRunner.class)
 public class WagonTests {
+	@WoodBox(key = "key", preference = false)
+	public String testBox = "testBox";
 
 	@Before
 	public void setUp() {
@@ -88,5 +90,18 @@ public class WagonTests {
 		assertThat(nestedCrateHolder.getNestedCrate().f, is(2f));
 		assertThat(nestedCrateHolder.getNestedCrate().d, is(3d));
 		assertThat(nestedCrateHolder.getNestedCrate().l, is(4l));
+	}
+
+	@Test
+	public void itDPacksAndUnpacksNonPreferences() {
+		Wagon<WagonTests> wagon = new Wagon<WagonTests>(this.getClass(), this);
+		Intent intent = new Intent();
+		wagon.pack(intent);
+		assertThat(intent.getExtras().getString("key"), is("testBox"));
+		//
+		testBox = null;
+		Wagon<WagonTests> wagon2 = new Wagon<WagonTests>(this.getClass(), this);
+		wagon2.unpack(intent);
+		assertThat(intent.getExtras().getString("key"), is("testBox"));
 	}
 }

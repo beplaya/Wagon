@@ -2,6 +2,7 @@ package com.aj.wagon;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,9 @@ import com.aj.wagon.testobjects.CrateHolder;
 
 @RunWith(TestRunner.class)
 public class WagonPreferenceTests {
+
+	@WoodBox(key = "key", preference = false)
+	public String testBox = "testBox";
 
 	@Mock
 	private SharedPreferences mockPreferences;
@@ -73,4 +77,10 @@ public class WagonPreferenceTests {
 		verify(mockPreferences).getLong(crateKey + "l", 0);
 	}
 
+	@Test
+	public void itDoesNotPackNonPreferences() {
+		Wagon<WagonPreferenceTests> wagon = new Wagon<WagonPreferenceTests>(this.getClass(), this);
+		wagon.pack(mockPreferences);
+		verify(mockEditor, never()).putString("key", "testBox");
+	}
 }

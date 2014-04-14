@@ -1,11 +1,14 @@
 package com.aj.wagon.testobjects;
 
+import com.aj.wagon.WoodBox;
+
 public class TestCrate {
 
 	public String s;
 	public int i;
 	public float f;
 	public double d;
+	@WoodBox(key = "l", preference = false)
 	public long l;
 
 	public TestCrate() {
