@@ -4,15 +4,15 @@ import com.aj.wagon.WoodBox;
 
 public class Boxes {
 
-	@WoodBox(key = "s")
+	@WoodBox(key = "s", preference = true)
 	public String s;
-	@WoodBox(key = "i")
+	@WoodBox(key = "i", preference = true)
 	public int i;
-	@WoodBox(key = "f")
+	@WoodBox(key = "f", preference = true)
 	public float f;
-	@WoodBox(key = "d")
+	@WoodBox(key = "d", preference = true)
 	public double d;
-	@WoodBox(key = "l")
+	@WoodBox(key = "l", preference = true)
 	public long l;
 
 	public Boxes() {
