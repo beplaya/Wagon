@@ -1,8 +1,14 @@
 package com.aj.wagon.sample;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -91,14 +97,28 @@ public class MainActivity extends Activity {
 		etValue = (EditText) findViewById(id.etValue);
 		updateView();
 		//
+
+	}
+
+	public static void postData() {
 		PostData postData = new PostData();
-
-		ArrayList<NameValuePair> list = new ArrayList<NameValuePair>();
+		// Create a new HttpClient and Post Header
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(uri);
+		ArrayList<NameValuePair> listOfPairs = new ArrayList<NameValuePair>();
 		Wagon<PostData> w = new Wagon<PostData>(postData.getClass(), postData);
-		w.pack(list);
+		w.pack(listOfPairs);
+		for (NameValuePair nvp : listOfPairs) {
+			Log.i("NameValuePair", nvp.getName() + " " + nvp.getValue());
+		}
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(listOfPairs));
+			// HttpResponse response = httpclient.execute(httppost);
 
-		for (NameValuePair nameValuePair : list) {
-			Log.e("", nameValuePair.getName() + " " + nameValuePair.getValue());
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

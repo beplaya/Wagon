@@ -1,10 +1,16 @@
 package com.aj.wagon;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,8 +46,29 @@ public class Wagon<E> {
 		return pack(intent, objType, obj, false, null);
 	}
 
-	public boolean pack(ArrayList<NameValuePair> list) {
-		return pack(list, objType, obj, false, null);
+	public boolean pack(ArrayList<NameValuePair> dataHolder) {
+		return pack(dataHolder, objType, obj, false, null);
+	}
+
+	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, String uri, IWagonPostListener listener) throws ClientProtocolException, IOException {
+		if (pack(dataHolder, objType, obj, false, null)) {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httppost = new HttpPost(uri);
+			httppost.setEntity(new UrlEncodedFormEntity(dataHolder));
+			listener.onHTTPResponse(httpclient.execute(httppost));
+			return true;
+		}
+		return false;
+	}
+
+	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, HttpClient httpclient, HttpPost httppost, IWagonPostListener listener) throws ClientProtocolException,
+			IOException {
+		if (pack(dataHolder, objType, obj, false, null)) {
+			httppost.setEntity(new UrlEncodedFormEntity(dataHolder));
+			listener.onHTTPResponse(httpclient.execute(httppost));
+			return true;
+		}
+		return false;
 	}
 
 	public boolean pack(Object dataHolder, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
