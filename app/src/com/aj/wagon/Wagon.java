@@ -4,15 +4,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 public class Wagon<E> {
 
-	public static final String VERSION = "1.10";
+	public static final String DEFUALT_TOKEN = ":";
+	public static final String VERSION = "1.21 beta";
 	private Object obj;
 	private Class<? extends E> objType;
+	private String token = DEFUALT_TOKEN;
 
 	/**
 	 * 
@@ -36,16 +40,18 @@ public class Wagon<E> {
 		return pack(intent, objType, obj, false, null);
 	}
 
-	/**
-	 * 
-	 * @param intent
-	 *            intent to put extras in
-	 * @return
-	 */
-	public boolean pack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
+	public boolean pack(ArrayList<NameValuePair> list) {
+		return pack(list, objType, obj, false, null);
+	}
+
+	public boolean pack(Object dataHolder, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {
+		crateKey = crateKey == null ? token + token : crateKey;
 		boolean itWorked = true;
 		Field[] declaredFields = objTypeToPack.getDeclaredFields();
-		Collector collector = new ExtrasCollector();
+		Collector collector = new NameValueCollector();
+		if (dataHolder instanceof Intent)
+			collector = new ExtrasCollector();
+
 		for (Field field : declaredFields) {
 			Annotation annotation = field.getAnnotation(WoodBox.class);
 			if (annotation == null)
@@ -55,14 +61,14 @@ public class Wagon<E> {
 					try {
 						Object instanceOfCrate = field.get(instance);
 						Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-						itWorked = pack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+						itWorked = pack(dataHolder, objTypeOfCrate, instanceOfCrate, true, crateKey + token + getKey(annotation));
 					} catch (Exception e) {
 						e.printStackTrace();
 						itWorked = false;
 					}
 				} else if (annotation instanceof WoodBox || packAllFields) {
-					String key = packAllFields ? crateKey + field.getName() : getKey(annotation);
-					itWorked = gatherBoxes(intent, collector, itWorked, field, annotation, key, instance);
+					String key = crateKey + token + field.getName();
+					itWorked = gatherBoxes(dataHolder, collector, itWorked, field, annotation, key, instance);
 				}
 			}
 		}
@@ -81,6 +87,7 @@ public class Wagon<E> {
 	}
 
 	public boolean unpack(Intent intent, Class<? extends Object> objTypeToPack, Object instance, boolean unpackAllFields, String crateKey) {
+		crateKey = crateKey == null ? token + token : crateKey;
 		boolean itWorked = true;
 		Bundle extras = intent.getExtras();
 		Extractor extractor = new ExtrasExtractor();
@@ -96,13 +103,13 @@ public class Wagon<E> {
 						try {
 							Object instanceOfCrate = field.get(instance);
 							Class<? extends Object> objTypeOfCrate = instanceOfCrate.getClass();
-							itWorked = unpack(intent, objTypeOfCrate, instanceOfCrate, true, getKey(annotation));
+							itWorked = unpack(intent, objTypeOfCrate, instanceOfCrate, true, crateKey + token + getKey(annotation));
 						} catch (Exception e) {
 							e.printStackTrace();
 							itWorked = false;
 						}
 					} else if (annotation instanceof WoodBox || unpackAllFields) {
-						String key = unpackAllFields ? crateKey + field.getName() : getKey(annotation);
+						String key = crateKey + token + field.getName();
 						itWorked = unpackBox(extras, extractor, field, annotation, key, instance, itWorked);
 					}
 				}
@@ -242,5 +249,13 @@ public class Wagon<E> {
 		}
 
 		return itWorked;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

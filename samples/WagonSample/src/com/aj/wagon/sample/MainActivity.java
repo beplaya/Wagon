@@ -2,9 +2,12 @@ package com.aj.wagon.sample;
 
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -88,7 +91,15 @@ public class MainActivity extends Activity {
 		etValue = (EditText) findViewById(id.etValue);
 		updateView();
 		//
+		PostData postData = new PostData();
 
+		ArrayList<NameValuePair> list = new ArrayList<NameValuePair>();
+		Wagon<PostData> w = new Wagon<PostData>(postData.getClass(), postData);
+		w.pack(list);
+
+		for (NameValuePair nameValuePair : list) {
+			Log.e("", nameValuePair.getName() + " " + nameValuePair.getValue());
+		}
 	}
 
 	private void updateView() {
