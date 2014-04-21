@@ -95,7 +95,6 @@ public class MainActivity extends Activity {
 		etValue = (EditText) findViewById(id.etValue);
 		updateView();
 		//
-		postData();
 	}
 
 	public static void postData() {
