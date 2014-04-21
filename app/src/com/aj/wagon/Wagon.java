@@ -50,25 +50,47 @@ public class Wagon<E> {
 		return pack(dataHolder, objType, obj, false, null);
 	}
 
-	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, String uri, IWagonPostListener listener) throws ClientProtocolException, IOException {
+	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, String uri, IWagonPostListener listener) {
 		if (pack(dataHolder, objType, obj, false, null)) {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost(uri);
-			httppost.setEntity(new UrlEncodedFormEntity(dataHolder));
-			listener.onHTTPResponse(httpclient.execute(httppost));
+			HttpPost httppost = null;
+			try {
+				httppost = new HttpPost(uri);
+			} catch (IllegalArgumentException e) {
+				listener.onInvalidURI(uri);
+				return false;
+			}
+			post(dataHolder, listener, httpclient, httppost);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, HttpClient httpclient, HttpPost httppost, IWagonPostListener listener) throws ClientProtocolException,
-			IOException {
+	public boolean packAndPost(ArrayList<NameValuePair> dataHolder, HttpClient httpclient, HttpPost httppost, IWagonPostListener listener) {
 		if (pack(dataHolder, objType, obj, false, null)) {
-			httppost.setEntity(new UrlEncodedFormEntity(dataHolder));
-			listener.onHTTPResponse(httpclient.execute(httppost));
+			post(dataHolder, listener, httpclient, httppost);
 			return true;
 		}
 		return false;
+	}
+
+	private void post(final ArrayList<NameValuePair> dataHolder, final IWagonPostListener listener, final HttpClient httpclient, final HttpPost httppost) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					httppost.setEntity(new UrlEncodedFormEntity(dataHolder));
+					listener.onHTTPResponse(httpclient.execute(httppost));
+				} catch (ClientProtocolException e) {
+					listener.onClientProtocolException(e);
+				} catch (IOException e) {
+					listener.onIOException(e);
+				} catch (IllegalStateException e) {
+					listener.onIllegalStateException(e);
+				}
+				return;
+			}
+		}).start();
 	}
 
 	public boolean pack(Object dataHolder, Class<? extends Object> objTypeToPack, Object instance, boolean packAllFields, String crateKey) {

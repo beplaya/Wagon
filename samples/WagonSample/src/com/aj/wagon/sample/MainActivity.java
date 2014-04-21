@@ -3,12 +3,9 @@ package com.aj.wagon.sample;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aj.wagon.Crate;
+import com.aj.wagon.IWagonPostListener;
 import com.aj.wagon.Wagon;
 import com.aj.wagon.WoodBox;
 import com.aj.wagon.sample.R.id;
@@ -97,29 +95,40 @@ public class MainActivity extends Activity {
 		etValue = (EditText) findViewById(id.etValue);
 		updateView();
 		//
-
+		postData();
 	}
 
 	public static void postData() {
 		PostData postData = new PostData();
-		// Create a new HttpClient and Post Header
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost(uri);
 		ArrayList<NameValuePair> listOfPairs = new ArrayList<NameValuePair>();
 		Wagon<PostData> w = new Wagon<PostData>(postData.getClass(), postData);
-		w.pack(listOfPairs);
-		for (NameValuePair nvp : listOfPairs) {
-			Log.i("NameValuePair", nvp.getName() + " " + nvp.getValue());
-		}
-		try {
-			httppost.setEntity(new UrlEncodedFormEntity(listOfPairs));
-			// HttpResponse response = httpclient.execute(httppost);
+		w.packAndPost(listOfPairs, "someurl", new IWagonPostListener() {
 
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			@Override
+			public void onIOException(IOException e) {
+				Log.e("packAndPost", "onIOException");
+			}
+
+			@Override
+			public void onHTTPResponse(HttpResponse response) {
+				Log.i("STATUS LINE", response.getStatusLine().getReasonPhrase());
+			}
+
+			@Override
+			public void onClientProtocolException(ClientProtocolException e) {
+				Log.e("packAndPost", "onClientProtocolException");
+			}
+
+			@Override
+			public void onInvalidURI(String uri) {
+				Log.e("packAndPost", "onInvalidURI");
+			}
+
+			@Override
+			public void onIllegalStateException(IllegalStateException e) {
+				Log.e("packAndPost", "onIllegalStateException");
+			}
+		});
 	}
 
 	private void updateView() {
