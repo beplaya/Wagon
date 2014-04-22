@@ -1,6 +1,6 @@
 #Wagon
 
-#####A no fuss method of passing extras between Android Activities and saving/loading preferences using annotations.
+#####Makes passing extras and saving/loading preferences clean and easy via annotations.
 
 ![](https://raw.githubusercontent.com/beplaya/Wagon/master/wagon_100.png)
 ##How To Use:
