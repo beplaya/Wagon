@@ -8,10 +8,17 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 
 ##Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
 
-##Gradle
+#### [Example Project 1.10](https://github.com/beplaya/GremlinDesigner)
+
+##Include
+
+#### Gradle
 ```compile 'james.a.grant:wagon:1.1.0'```
 
-### Bintray ([Wagon] (https://bintray.com/beplaya/maven/wagon))
+#### Bintray ([Wagon] (https://bintray.com/beplaya/maven/wagon))
+#### Download Jars (https://github.com/beplaya/Wagon/releases)
+
+##Use
 
 ####Annotate which fields you'd like to put in the wagon:
 ```Java
