@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="james.a.grant.wagon">
 
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="22" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
