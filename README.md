@@ -8,6 +8,9 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 
 ##Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
 
+##Gradle
+```compile 'james.a.grant:wagon:1.1.0'```
+
 ####Annotate which fields you'd like to put in the wagon:
 ```Java
 
