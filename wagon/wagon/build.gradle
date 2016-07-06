@@ -13,7 +13,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.1.0"
+version = "1.1.1"
 group = "james.a.grant"
 
 def siteUrl = 'https://github.com/beplaya/Wagon'
@@ -87,6 +87,9 @@ install {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'org.robolectric:robolectric:3.0'
 }
 
 task sourcesJar(type: Jar) {
