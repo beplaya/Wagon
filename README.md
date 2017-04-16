@@ -1,16 +1,16 @@
-#Wagon
+# Wagon
 
-#####Makes passing extras and saving/loading preferences clean and easy via annotations.
+##### Makes passing extras and saving/loading preferences clean and easy via annotations.
 
 ![](https://raw.githubusercontent.com/beplaya/Wagon/master/wagon_100.png)
-##How To Use:
+## How To Use:
 Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' doesn't exist, create it at the same level as 'src'.
 
-##Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
+## Examples: ([See wiki] (https://github.com/beplaya/Wagon/wiki))
 
 #### [Example Project 1.10](https://github.com/beplaya/GremlinDesigner)
 
-##Include
+## Include
 
 #### Gradle
 ```compile 'james.a.grant:wagon:1.1.0'```
@@ -18,9 +18,9 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 #### Bintray ([Wagon] (https://bintray.com/beplaya/maven/wagon))
 #### Download Jars (https://github.com/beplaya/Wagon/releases)
 
-##Use
+## Use
 
-####Annotate which fields you'd like to put in the wagon:
+#### Annotate which fields you'd like to put in the wagon:
 ```Java
 
   	public class MainActivity extends Activity {
@@ -36,7 +36,7 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 	//...
 }
 ```
-####Pack your wagon and start the next activity:
+#### Pack your wagon and start the next activity:
 ```Java
 	//...
 	private void startNextAcitivity() {
@@ -47,7 +47,7 @@ Put the wagon_x.xx.jar in the Android 'libs' folder of your project.  If 'libs' 
 	}
 	//...
 ```
-####Unpack your wagon:
+#### Unpack your wagon:
 ```Java
 public class OtherActivity extends Activity {
 
@@ -73,7 +73,7 @@ public class OtherActivity extends Activity {
 }
 ```
 
-####CrateExample class used above
+#### CrateExample class used above
 ```Java
 public class CrateExample {
 
@@ -96,10 +96,10 @@ public class CrateExample {
 }
 ```
 
-####Nesting crates
-#####You may nest crates within other crates without limit.  Simply annotate each Object field in the class as @Crate.
-#####There is no reason to use a WoodBox within a Crate.  Any field within a Crate is already considered a WoodBox.
-#####E.G.
+#### Nesting crates
+##### You may nest crates within other crates without limit.  Simply annotate each Object field in the class as @Crate.
+##### There is no reason to use a WoodBox within a Crate.  Any field within a Crate is already considered a WoodBox.
+##### E.G.
 ```Java
 	public class MainActivity extends Activity {
 	@WoodBox(key = "aBox")
@@ -141,8 +141,8 @@ public class NestedCrateExample {
 }
 ```
 
-####SharedPreferences 
-#####Just like extras, Wagon can pass annotated fields to SharedPreferences:
+#### SharedPreferences 
+##### Just like extras, Wagon can pass annotated fields to SharedPreferences:
 ```Java
 	...
 	@Crate(key = "myPreferenceCrate", preference = true)
